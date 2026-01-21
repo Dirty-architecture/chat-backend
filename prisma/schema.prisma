@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  login      String
+  picture    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  lastSeenAt DateTime @updatedAt @map("last_seen_at")
+
+  chats    ChatUser[]
+  messages Message[]
+
+  sentFriendRequests     Friend[] @relation("FriendRequester")
+  receivedFriendRequests Friend[] @relation("FriendAddressee")
+  Chat                   Chat[]
+
+  @@map("users")
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  email     String
+  token     String    @unique
+  type      TokenType
+  expiresIn DateTime  @map("expires_in")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@map("tokens")
+}
+
+model ChatUser {
+  chatId   String   @map("chat_id")
+  userId   String   @map("user_id")
+  role     ChatRole @default(MEMBER)
+  joinedAt DateTime @default(now()) @map("joined_at")
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([chatId, userId])
+  @@map("chats_users")
+}
+
+model Friend {
+  id          String       @id @default(uuid())
+  requesterId String       @map("requester_id")
+  addresseeId String       @map("addressee_id")
+  status      FriendStatus @default(PENDING)
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  requester User @relation("FriendRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@map("friends")
+}
+
+model Message {
+  id        BigInt    @id @default(autoincrement())
+  chatId    String    @map("chat_id")
+  senderId  String    @map("sender_id")
+  body      String
+  createdAt DateTime  @default(now()) @map("created_at")
+  editedAt  DateTime? @map("edited_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  type      ChatType
+  title     String?
+  ownerId   String?  @map("owner_id")
+  owner     User?    @relation(fields: [ownerId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  users    ChatUser[]
+  messages Message[]
+
+  @@map("chats")
+}
+
+enum TokenType {
+  VERIFICATION
+  TWO_FACTOR
+  PASSWORD_RESET
+}
+
+enum ChatType {
+  PRIVATE
+  GROUP
+}
+
+enum ChatRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
