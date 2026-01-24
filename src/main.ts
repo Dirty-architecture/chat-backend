@@ -1,19 +1,15 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import { AppBootstrap } from './app/app.bootstrap';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-  );
+  const appBootstrap = new AppBootstrap();
 
-  app.enableShutdownHooks();
-
-  await app.listen(3000, '0.0.0.0');
+  try {
+    await appBootstrap.initialize();
+    await appBootstrap.start();
+  } catch (error) {
+    console.error('Failed to bootstrap application:', error);
+    process.exit(1);
+  }
 }
 
 void bootstrap();

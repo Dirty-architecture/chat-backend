@@ -1,23 +1,23 @@
 version: '3.7'
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - ${APPLICATION_PORT}:${APPLICATION_PORT}
-    container_name: "codenames-api"
-    volumes:
-      - '.:/app'
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    restart: on-failure
-    networks:
-      - backend
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - ${APPLICATION_PORT}:${APPLICATION_PORT}
+#    container_name: "chat-api"
+#    volumes:
+#      - '.:/app'
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#      redis:
+#        condition: service_healthy
+#    restart: on-failure
+#    networks:
+#      - backend
 
   db:
     container_name: postgres

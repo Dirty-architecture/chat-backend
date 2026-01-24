@@ -7,14 +7,13 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  email      String   @unique
+  id         String    @id @default(uuid())
+  login      String    @unique
   password   String
-  login      String
   picture    String?
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  lastSeenAt DateTime @updatedAt @map("last_seen_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  lastSeenAt DateTime? @map("last_seen_at")
 
   chats    ChatUser[]
   messages Message[]
@@ -24,17 +23,6 @@ model User {
   Chat                   Chat[]
 
   @@map("users")
-}
-
-model Token {
-  id        String    @id @default(uuid())
-  email     String
-  token     String    @unique
-  type      TokenType
-  expiresIn DateTime  @map("expires_in")
-  createdAt DateTime  @default(now()) @map("created_at")
-
-  @@map("tokens")
 }
 
 model ChatUser {
@@ -92,12 +80,6 @@ model Chat {
   messages Message[]
 
   @@map("chats")
-}
-
-enum TokenType {
-  VERIFICATION
-  TWO_FACTOR
-  PASSWORD_RESET
 }
 
 enum ChatType {
