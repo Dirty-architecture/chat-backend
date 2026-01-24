@@ -15,7 +15,6 @@ model User {
   updatedAt  DateTime  @updatedAt @map("updated_at")
   lastSeenAt DateTime? @map("last_seen_at")
 
-  tokens   Token[]
   chats    ChatUser[]
   messages Message[]
 

@@ -1,5 +1,5 @@
 import {BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common'
-import type { FastifyRequest, FastifyReply } from 'fastify'
+import type { FastifyRequest } from 'fastify'
 import * as argon2 from 'argon2'
 
 import {LoginDto} from './dto/login.dto'
@@ -62,7 +62,7 @@ export class AuthService {
     return this.saveSession(req, user)
   }
 
-	public async logout(req: FastifyRequest, res: FastifyReply): Promise<void> {
+	public async logout(req: FastifyRequest): Promise<void> {
     return new Promise((resolve, reject) => {
       req.session.destroy(err => {
         if (err) {
