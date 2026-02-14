@@ -20,7 +20,7 @@ export class SessionConfigFactory {
         cookieName: this.configService.getOrThrow<string>('SESSION_NAME'),
         saveUninitialized: false,
         cookie: {
-          domain: this.configService.getOrThrow<string>('SESSION_DOMAIN'),
+          //domain: this.configService.getOrThrow<string>('SESSION_DOMAIN'),
           maxAge: ms(this.configService.getOrThrow<StringValue>('SESSION_MAX_AGE')),
           httpOnly: parseBoolean(this.configService.getOrThrow('SESSION_HTTP_ONLY')),
           secure: parseBoolean(this.configService.getOrThrow('SESSION_SECURE')),
