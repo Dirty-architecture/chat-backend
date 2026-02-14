@@ -1,5 +1,5 @@
-import {Body, Controller, HttpCode, HttpStatus, Post, Req, Res} from '@nestjs/common'
-import type { FastifyRequest, FastifyReply } from 'fastify'
+import {Body, Controller, HttpCode, HttpStatus, Post, Req} from '@nestjs/common'
+import type { FastifyRequest } from 'fastify'
 import {AuthService} from './auth.service'
 import {LoginDto} from './dto/login.dto'
 import {RegisterDto} from './dto/register.dto'
@@ -29,8 +29,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async logout(
     @Req() req: FastifyRequest,
-    @Res({ passthrough: true }) res: FastifyReply,
   ) {
-    return this.authService.logout(req, res)
+    return this.authService.logout(req)
   }
 }

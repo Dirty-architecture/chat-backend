@@ -73,7 +73,6 @@ export class AppBootstrap {
     await this.app.listen(port, '0.0.0.0', () => {
       this.logger.debug(`Application is running on port ${port}`);
       this.logger.debug(`Environment: ${process.env.NODE_ENV || 'development'}`);
-      this.logger.debug(`Redis: ${this.configService.get('REDIS_URI')}`);
       this.logger.debug(`Allowed origin: ${this.configService.get('ALLOWED_ORIGIN')}`);
     });
   }
