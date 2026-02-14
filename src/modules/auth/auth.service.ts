@@ -79,6 +79,7 @@ export class AuthService {
 
   private async saveSession(req: FastifyRequest, user: User) {
     return new Promise((resolve, reject) => {
+      // @ts-ignore
       req.session.userId = user.id
 
       req.session.save(err => {

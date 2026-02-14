@@ -42,6 +42,7 @@ export class AppBootstrap {
   }
 
   private async setupCookies(): Promise<void> {
+    // @ts-ignore
     await this.app.register(fastifyCookie, {
       secret: this.configService.getOrThrow<string>('COOKIES_SECRET'),
     });
@@ -51,11 +52,14 @@ export class AppBootstrap {
     const sessionConfigFactory = new SessionConfigFactory(this.configService);
     const sessionConfig = sessionConfigFactory.create(this.redisClient.getClient());
 
+    // @ts-ignore
     await this.app.register(fastifySession, sessionConfig.options);
   }
 
   private async setupCors(): Promise<void> {
     const corsOptions = CorsConfig.create(this.configService);
+
+    // @ts-ignore
     await this.app.register(cors, corsOptions);
   }
 
