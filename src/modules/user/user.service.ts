@@ -1,7 +1,8 @@
 import {Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaService} from '@/modules/prisma/prisma.service'
-import {SearchDto} from "@/modules/user/dto/search.dto";
-import {SortOrder} from "@/shared";
+import { SearchDto } from '@/modules/user/dto/search.dto'
+import { SortOrder } from '@/shared'
+import { ICursor } from '@/shared/interfaces/cursor.interface'
 
 @Injectable()
 export class UserService {
@@ -23,10 +24,20 @@ export class UserService {
     return user
   }
 
-  public async search(dto: SearchDto, currentUserId: string) {
-    const {limit = 20, search, cursor, type = SortOrder.ASC} = dto
+  public async search(
+    dto: SearchDto,
+    currentUserId: string
+  ): Promise<
+    ICursor<{
+      id: string
+      login: string
+      picture: string | null
+      lastSeenAt: Date | null
+    }>
+  > {
+    const { limit = 20, search, cursor, type = SortOrder.ASC } = dto
 
-    return this.prismaService.user.findMany({
+    const rows = await this.prismaService.user.findMany({
       where: {
         login: {
           contains: search,
@@ -42,14 +53,24 @@ export class UserService {
         picture: true,
         lastSeenAt: true,
       },
-      take: limit,
+      take: limit + 1,
       ...(cursor && {
         skip: 1,
         cursor: { id: cursor },
       }),
       orderBy: {
-        login: type,
+        id: type,
       },
     })
+
+    const hasNext = rows.length > limit
+    const items = hasNext ? rows.slice(0, limit) : rows
+    const nextCursor = items.length ? items[items.length - 1].id : null
+
+    return {
+      items,
+      hasNext,
+      cursor: hasNext ? nextCursor : null,
+    }
   }
 }
