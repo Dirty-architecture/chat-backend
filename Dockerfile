@@ -9,4 +9,4 @@ COPY . .
 RUN yarn prisma generate
 RUN yarn build
 
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "yarn prisma:migrate && node dist/main"]
