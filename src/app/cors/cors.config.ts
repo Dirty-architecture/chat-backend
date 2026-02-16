@@ -10,8 +10,8 @@ export class CorsConfig {
       .filter(Boolean);
 
     const fallbackDev = ['http://localhost:5173', 'http://127.0.0.1:5173'];
-    const allowed = allowedFromEnv.length ? allowedFromEnv : fallbackDev;
-
+    // const allowed = allowedFromEnv.length ? allowedFromEnv : fallbackDev;
+    const allowed = fallbackDev
     return {
       origin: (origin, cb) => {
         // запросы без Origin (curl, сервер-сервер) — пропускаем
