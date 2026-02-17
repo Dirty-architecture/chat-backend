@@ -9,7 +9,7 @@ export class CorsConfig {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const fallbackDev = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+    const fallbackDev = ['http://localhost:5173','https://localhost:5173', 'http://127.0.0.1:5173'];
     // const allowed = allowedFromEnv.length ? allowedFromEnv : fallbackDev;
     const allowed = fallbackDev
     return {
