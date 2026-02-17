@@ -24,7 +24,7 @@ export class SessionConfigFactory {
           maxAge: ms(this.configService.getOrThrow<StringValue>('SESSION_MAX_AGE')),
           httpOnly: parseBoolean(this.configService.getOrThrow('SESSION_HTTP_ONLY')),
           secure: parseBoolean(this.configService.getOrThrow('SESSION_SECURE')),
-          sameSite: 'none' as const,
+          sameSite: 'lax' as const,
         },
         store: new RedisStore({
           client: redisClient,
