@@ -26,6 +26,7 @@ export class SessionConfigFactory {
           // secure: parseBoolean(this.configService.getOrThrow('SESSION_SECURE')),
           secure: true,
           sameSite: 'none' as const,
+          partitioned: true
         },
         store: new RedisStore({
           client: redisClient,

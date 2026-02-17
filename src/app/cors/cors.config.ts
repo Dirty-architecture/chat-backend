@@ -9,32 +9,16 @@ export class CorsConfig {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const allowLocalDev = new Set(['http://localhost:5173', 'http://127.0.0.1:5173']);
-    const envExact = new Set(allowedFromEnv);
-
-    const isTunaHostname = (hostname: string) =>
-      hostname === 'tuna.am' || hostname.endsWith('.tuna.am');
-
+    const fallbackDev = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+    // const allowed = allowedFromEnv.length ? allowedFromEnv : fallbackDev;
+    const allowed = fallbackDev
     return {
       origin: (origin, cb) => {
         // запросы без Origin (curl, сервер-сервер) — пропускаем
         if (!origin) return cb(null, true);
 
-        // 1) точечный allowlist из env (если используете)
-        if (envExact.has(origin)) return cb(null, true);
-
-        // 2) localhost для дев-режима
-        if (allowLocalDev.has(origin)) return cb(null, true);
-
-        // 3) универсально для Tuna
-        try {
-          const { hostname } = new URL(origin);
-          if (isTunaHostname(hostname)) return cb(null, true);
-        } catch {
-          // origin не URL — запрещаем
-        }
-
-        return cb(null, false);
+        const ok = allowed.includes(origin);
+        return cb(null, ok);
       },
       credentials: true,
       exposedHeaders: ['set-cookie'],
